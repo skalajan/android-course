@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="titulek_katalogu">Cats</string>
+
+    <string name="login_uzivatelske_jmeno">User name</string>
+    <string name="login_uzivatelske_heslo">Password</string>
+    <string name="login_podminky">Terms agree</string>
+    <string name="login_prihlasit">Log in</string>
 </resources>

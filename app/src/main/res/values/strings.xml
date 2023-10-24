@@ -2,4 +2,9 @@
     <string name="app_name" translatable="false">My Application</string>
 
     <string name="titulek_katalogu">Katalog koček</string>
+
+    <string name="login_uzivatelske_jmeno">Uživatelské jméno</string>
+    <string name="login_uzivatelske_heslo">Heslo</string>
+    <string name="login_podminky">Bezmezně souhlasím s podmínkami aplikace</string>
+    <string name="login_prihlasit">Přihlásit se</string>
 </resources>

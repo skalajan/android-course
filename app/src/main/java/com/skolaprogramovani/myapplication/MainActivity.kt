@@ -10,6 +10,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.skolaprogramovani.myapplication.katalog.KatalogKocek
+import com.skolaprogramovani.myapplication.login.LoginScreen
 
 private val TAG = "MainActivity"
 
@@ -32,6 +34,11 @@ fun HlavniNavigace() {
   val navController = rememberNavController()
 
   NavHost(navController = navController, startDestination = "katalogKocek") {
+    composable("login"){
+      LoginScreen(loginBylUspesny = {
+        navController.navigate("katalogKocek")
+      })
+    }
     composable("katalogKocek") {
       KatalogKocek({ idKocky ->
         Log.v(TAG, "Klik na kocku $idKocky")

@@ -1,6 +1,8 @@
-package com.skolaprogramovani.myapplication
+package com.skolaprogramovani.myapplication.katalog
 
 import androidx.lifecycle.ViewModel
+import com.skolaprogramovani.myapplication.KockyRepository
+import com.skolaprogramovani.myapplication.R
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class KatalogViewModel : ViewModel() {
