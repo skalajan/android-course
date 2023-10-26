@@ -10,6 +10,8 @@ class KatalogViewModel : ViewModel() {
   val vekNoveKocky: MutableStateFlow<Int?> = MutableStateFlow(null)
   val kocky = MutableStateFlow(KockyRepository.nactiKocky())
 
+  val pridavaciDialog = MutableStateFlow(false)
+
   fun prenacti(){
     kocky.value = KockyRepository.nactiKocky()
   }
@@ -26,5 +28,8 @@ class KatalogViewModel : ViewModel() {
     )
     prenacti()
     jmenoNoveKocky.value = ""
+    vekNoveKocky.value = null
+
+    pridavaciDialog.value = false
   }
 }

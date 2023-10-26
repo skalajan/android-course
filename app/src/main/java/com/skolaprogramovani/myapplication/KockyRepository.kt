@@ -15,4 +15,8 @@ object KockyRepository {
 
   fun nactiKocku(idKocky: Long?): Kocka? =
     kocky.firstOrNull { kocka -> kocka.id == idKocky }
+
+  fun smazKocku(id: Long) {
+    kocky.removeIf { it.id == id }
+  }
 }

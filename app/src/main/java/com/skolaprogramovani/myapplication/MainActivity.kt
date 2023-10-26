@@ -33,24 +33,26 @@ class MainActivity : ComponentActivity() {
 fun HlavniNavigace() {
   val navController = rememberNavController()
 
-  NavHost(navController = navController, startDestination = "katalogKocek") {
+  NavHost(navController = navController, startDestination = "detailKocky/1") {
     composable("login"){
       LoginScreen(loginBylUspesny = {
         navController.navigate("katalogKocek")
       })
     }
     composable("katalogKocek") {
-      KatalogKocek({ idKocky ->
+      KatalogKocek { idKocky ->
         Log.v(TAG, "Klik na kocku $idKocky")
         navController.navigate("detailKocky/$idKocky")
-      })
+      }
     }
     composable("detailKocky/{idKocky}", arguments = listOf(navArgument("idKocky") {
       type = NavType.LongType
     })) {
       val idKocky = it.arguments?.getLong("idKocky")
       Log.v(TAG, "Klik na kocku $idKocky")
-      DetailKocky(idKocky)
+      DetailKocky(idKocky){
+        navController.popBackStack()
+      }
     }
   }
 }
