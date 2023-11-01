@@ -1,5 +1,6 @@
 package com.skolaprogramovani.myapplication
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
 fun HlavniNavigace() {
   val navController = rememberNavController()
 
-  NavHost(navController = navController, startDestination = "detailKocky/1") {
+  NavHost(navController = navController, startDestination = "katalogKocek") {
     composable("login"){
       LoginScreen(loginBylUspesny = {
         navController.navigate("katalogKocek")
@@ -50,7 +51,7 @@ fun HlavniNavigace() {
     })) {
       val idKocky = it.arguments?.getLong("idKocky")
       Log.v(TAG, "Klik na kocku $idKocky")
-      DetailKocky(idKocky){
+      DetailKocky{
         navController.popBackStack()
       }
     }
