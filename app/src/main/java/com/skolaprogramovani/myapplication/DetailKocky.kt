@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -51,6 +52,9 @@ fun DetailKocky(zpet: () -> Unit) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
             Column {
                 Nadpis(viewModel, zpet)
+
+                TextZeServeru(viewModel.textZeServeru.collectAsState().value)
+
                 ZobrazeniKocky(kocka = kocka)
 
                 Text(
@@ -73,13 +77,31 @@ fun DetailKocky(zpet: () -> Unit) {
 }
 
 @Composable
+fun TextZeServeru(value: DetailViewModel.StavVolani) {
+    when(value){
+        is DetailViewModel.StavVolani.Chyba -> {
+            Text(text = "Chyba")
+        }
+        DetailViewModel.StavVolani.NacitaSe -> Text(text = "...")
+        is DetailViewModel.StavVolani.Uspech -> Text(text = value.text)
+    }
+}
+
+@Composable
 fun ZobrazeniKocky(kocka: KockyRepository.Kocka) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(all = 4.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(painter = painterResource(id = kocka.obrazekRes), contentDescription = "")
+        if (kocka.obrazek != null) {
+            AsyncImage(model = kocka.obrazek, contentDescription = "")
+        } else {
+            Image(
+                painter = painterResource(id = kocka.obrazekRes ?: R.drawable.ic_kocka1),
+                contentDescription = ""
+            )
+        }
         Text(text = kocka.jmeno)
         Text(text = kocka.vek?.toString() ?: "")
         Text(text = kocka.vaha.toString())

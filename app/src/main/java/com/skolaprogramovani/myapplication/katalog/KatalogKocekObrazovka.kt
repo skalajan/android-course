@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.skolaprogramovani.myapplication.KockyRepository
 import com.skolaprogramovani.myapplication.R
 
@@ -43,96 +44,105 @@ private val TAG = "KatalogKocek"
 
 @Composable
 fun KatalogKocek(kliknutiNaKocku: (Long) -> Unit) {
-  Log.v(TAG, "KatalogKocek")
-  val viewModel: KatalogViewModel = viewModel()
-  
-  if(viewModel.pridavaciDialog.collectAsState().value){
-    Dialog(onDismissRequest = {
-      viewModel.pridavaciDialog.value = false
-    }) {
-      Card {
-        FormularPridani(viewModel)
-      }
-    }
-  }
+    Log.v(TAG, "KatalogKocek")
+    val viewModel: KatalogViewModel = viewModel()
 
-  Box(modifier = Modifier.fillMaxSize()) {
-    Column {
-      Text(
-        modifier = Modifier.padding(16.dp),
-        text = stringResource(id = R.string.titulek_katalogu),
-        fontSize = 30.sp
-      )
-
-      LazyVerticalGrid(columns = GridCells.Fixed(4)) {
-        items(viewModel.kocky.value){kocka ->
-          Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-          ) {
-            Zaznam(kocka = kocka, kliknutiNaKocku)
-          }
+    if (viewModel.pridavaciDialog.collectAsState().value) {
+        Dialog(onDismissRequest = {
+            viewModel.pridavaciDialog.value = false
+        }) {
+            Card {
+                FormularPridani(viewModel)
+            }
         }
-      }
     }
 
-    FloatingActionButton(modifier = Modifier
-      .padding(32.dp)
-      .align(Alignment.BottomEnd),
-      onClick = {
-        viewModel.pridavaciDialog.value = true
-      }, containerColor = Color.DarkGray, contentColor = Color.White
-    ) {
-      Text(text = "+")
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column {
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = stringResource(id = R.string.titulek_katalogu),
+                fontSize = 30.sp
+            )
+
+            val kocky = viewModel.kocky.collectAsState().value
+            LazyVerticalGrid(columns = GridCells.Fixed(4)) {
+                items(kocky) { kocka ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Zaznam(kocka = kocka, kliknutiNaKocku)
+                    }
+                }
+            }
+        }
+
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(32.dp)
+                .align(Alignment.BottomEnd),
+            onClick = {
+                viewModel.pridavaciDialog.value = true
+            }, containerColor = Color.DarkGray, contentColor = Color.White
+        ) {
+            Text(text = "+")
+        }
     }
-  }
 }
 
 @Composable
 private fun Zaznam(kocka: KockyRepository.Kocka, kliknutiNaKocku: (Long) -> Unit) {
-  Column(modifier = Modifier
-    .padding(all = 4.dp)
-    .clickable {
-      kliknutiNaKocku(kocka.id)
-    }) {
-    Image(painter = painterResource(id = kocka.obrazekRes), contentDescription = "")
-    Text(text = kocka.jmeno)
-    Text(text = kocka.vek?.toString() ?: "")
-    Text(text = kocka.vaha.toString())
-  }
+    Column(modifier = Modifier
+        .padding(all = 4.dp)
+        .clickable {
+            kliknutiNaKocku(kocka.id)
+        }) {
+        if (kocka.obrazek != null) {
+            AsyncImage(model = kocka.obrazek, contentDescription = "")
+        } else {
+            Image(
+                painter = painterResource(id = kocka.obrazekRes ?: R.drawable.ic_kocka1),
+                contentDescription = ""
+            )
+        }
+        Text(text = kocka.jmeno)
+        Text(text = kocka.vek?.toString() ?: "")
+        Text(text = kocka.vaha.toString())
+    }
 }
 
 @Composable
 private fun FormularPridani(viewModel: KatalogViewModel) {
-  Column(modifier = Modifier.padding(16.dp)) {
-    OutlinedTextField(
-      label = {
-        Text(text = "Jmeno kočky")
-      },
-      value = viewModel.jmenoNoveKocky.collectAsState().value,
-      onValueChange = { novaHodnota: String ->
-        viewModel.jmenoNoveKocky.value = novaHodnota
-      })
-    OutlinedTextField(
-      label = {
-        Text(text = "Věk kočky")
-      },
-      value = viewModel.vekNoveKocky.collectAsState().value?.toString() ?: "",
-      keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-      onValueChange = {
-        try {
-          viewModel.vekNoveKocky.value = it.toInt()
-        } catch (e: Exception) {
-          Log.e(TAG, "Chybný věk", e)
+    Column(modifier = Modifier.padding(16.dp)) {
+        OutlinedTextField(
+            label = {
+                Text(text = "Jmeno kočky")
+            },
+            value = viewModel.jmenoNoveKocky.collectAsState().value,
+            onValueChange = { novaHodnota: String ->
+                viewModel.jmenoNoveKocky.value = novaHodnota
+            })
+        OutlinedTextField(
+            label = {
+                Text(text = "Věk kočky")
+            },
+            value = viewModel.vekNoveKocky.collectAsState().value?.toString() ?: "",
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            onValueChange = {
+                try {
+                    viewModel.vekNoveKocky.value = it.toInt()
+                } catch (e: Exception) {
+                    Log.e(TAG, "Chybný věk", e)
+                }
+            })
+        Button(modifier = Modifier
+            .padding(top = 16.dp)
+            .align(Alignment.End), onClick = {
+            Log.v(TAG, "Přidávam kočku")
+            viewModel.pridejKocku()
+        }) {
+            Text(text = "Přidej kočku")
         }
-      })
-    Button(modifier = Modifier
-      .padding(top = 16.dp)
-      .align(Alignment.End), onClick = {
-      Log.v(TAG, "Přidávam kočku")
-      viewModel.pridejKocku()
-    }) {
-      Text(text = "Přidej kočku")
     }
-  }
 }

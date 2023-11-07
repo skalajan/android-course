@@ -59,6 +59,14 @@ dependencies {
   implementation("androidx.navigation:navigation-compose:2.7.4")
   implementation("androidx.datastore:datastore-preferences:1.0.0")
 
+  val ktor_version="2.3.5"
+  implementation("io.ktor:ktor-client-core:$ktor_version")
+  implementation("io.ktor:ktor-client-cio:$ktor_version")
+  implementation("io.ktor:ktor-serialization-gson:$ktor_version")
+  implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+
+  implementation("io.coil-kt:coil-compose:2.5.0")
+
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.5")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

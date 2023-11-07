@@ -1,19 +1,27 @@
 package com.skolaprogramovani.myapplication.katalog
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.skolaprogramovani.myapplication.KockyRepository
 import com.skolaprogramovani.myapplication.R
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 class KatalogViewModel : ViewModel() {
   val jmenoNoveKocky = MutableStateFlow("")
   val vekNoveKocky: MutableStateFlow<Int?> = MutableStateFlow(null)
-  val kocky = MutableStateFlow(KockyRepository.nactiKocky())
+  val kocky = MutableStateFlow<List<KockyRepository.Kocka>>(emptyList())
 
   val pridavaciDialog = MutableStateFlow(false)
 
+  init {
+      prenacti()
+  }
+
   fun prenacti(){
-    kocky.value = KockyRepository.nactiKocky()
+    viewModelScope.launch {
+      kocky.value = KockyRepository.nactiKockyZeServeru().kocky
+    }
   }
 
   fun pridejKocku() {
@@ -23,7 +31,8 @@ class KatalogViewModel : ViewModel() {
         jmenoNoveKocky.value,
         1.1,
         vekNoveKocky.value,
-        R.drawable.ic_kocka3
+        R.drawable.ic_kocka3,
+        null
       )
     )
     prenacti()
